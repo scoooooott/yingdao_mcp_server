@@ -12,7 +12,7 @@ const resources = {
       'tool.queryJob.description': 'This interface is used to query the status of an RPA job.',
       'tool.queryClientList.description': 'This interface is used to query the list of RPA clients.',
       'tool.runApp.description': 'This interface is used to run an RPA application.',
-      
+
       // Tool errors
       'tool.uploadFile.error': 'Failed to upload file',
       'tool.queryRobotParam.error': 'Failed to query robot parameters',
@@ -21,7 +21,7 @@ const resources = {
       'tool.queryJob.error': 'Failed to query job status',
       'tool.queryClientList.error': 'Failed to query client list',
       'tool.runApp.error': 'Failed to run application',
-      
+
       // RpaService validation errors
       'rpaService.error.fileNameTooLong': 'File name length cannot exceed 100 characters',
       'rpaService.error.unsupportedFileType': 'Only txt, csv, xlsx file types are supported',
@@ -36,8 +36,11 @@ const resources = {
       'rpaService.error.queryJobFailed': 'Failed to query application execution result',
       'rpaService.error.pageSizeRequired': 'page and size are required parameters',
       'rpaService.error.queryClientListFailed': 'Failed to query robot list',
-      
+
       // Schema descriptions
+      'schema.local.executeRpaApp.appUuid': 'RPA application ID',
+      'schema.local.executeRpaApp.appParams': 'RPA application arguments',
+      'schema.local.queryRobotParam.robotUuid': 'RPA application ID',
       'schema.uploadFile.file': 'File content',
       'schema.uploadFile.fileName': 'File name, supports txt, csv, xlsx formats, length not exceeding 100 characters',
       'schema.robotParam.robotUuid': 'RPA application uuid',
@@ -76,7 +79,7 @@ const resources = {
       'tool.queryJob.description': '该接口用于查询RPA应用JOB状态。',
       'tool.queryClientList.description': '该接口用于查询RPA机器人列表。',
       'tool.runApp.description': '该接口用于运行RPA应用。',
-      
+
       // Tool errors
       'tool.uploadFile.error': '上传文件失败',
       'tool.queryRobotParam.error': '查询机器人参数失败',
@@ -85,7 +88,7 @@ const resources = {
       'tool.queryJob.error': '查询RPA应用JOB状态失败',
       'tool.queryClientList.error': '查询RPA机器人列表失败',
       'tool.runApp.error': '运行RPA应用失败',
-      
+
       // RpaService validation errors
       'rpaService.error.fileNameTooLong': '文件名长度不能超过100',
       'rpaService.error.unsupportedFileType': '仅支持txt、csv、xlsx文件类型',
@@ -100,8 +103,11 @@ const resources = {
       'rpaService.error.queryJobFailed': '查询RPA应用JOB状态失败',
       'rpaService.error.pageSizeRequired': 'page和size是必填参数',
       'rpaService.error.queryClientListFailed': '查询RPA机器人列表失败',
-      
+
       // Schema descriptions
+      'schema.local.executeRpaApp.appUuid': 'RPA应用UUID',
+      'schema.local.executeRpaApp.appParams': 'RPA应用参数',
+      'schema.local.queryRobotParam.robotUuid': 'RPA应用UUID',
       'schema.uploadFile.file': '文件内容',
       'schema.uploadFile.fileName': '文件名，支持txt、csv、xlsx格式，长度不超过100字符',
       'schema.robotParam.robotUuid': 'RPA应用UUID',

@@ -2,4 +2,11 @@ package-lock.json
 node_modules
 
 # production
-/dist
+/dist%
+
+# pnpm
+pnpm-lock.yaml
+
+# IDE
+.idea/
+.vscode/
