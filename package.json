@@ -1,21 +1,22 @@
 {
-  "name": "yingdao-mcp-server",
-  "version": "0.0.2",
+  "name": "yingdao-mcp-server-community",
+  "version": "0.0.3",
   "description": "Mcp server for yingdao rpa, both sse and stdio mode",
   "license": "MIT",
   "author": "Automa AI Power(https://www.automa.site/)",
   "homepage": "https://www.automa.site/",
   "type": "module",
-  "bugs": "https://github.com/ying-dao/yingdao_mcp_server/issues",
+  "bugs": "https://github.com/scoooooott/yingdao_mcp_server/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ying-dao/yingdao_mcp_server.git"
+    "url": "git+https://github.com/scoooooott/yingdao_mcp_server.git"
   },
+  "homepage": "https://github.com/scoooooott/yingdao_mcp_server#readme",
   "files": [
     "dist"
   ],
   "bin": {
-    "yingdao-mcp-server": "dist/index.js"
+    "yingdao-mcp-server-community": "dist/index.js"
   },
   "main": "dist/index.js",
   "scripts": {

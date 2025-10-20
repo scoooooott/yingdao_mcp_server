@@ -61,7 +61,7 @@ ACCESS_KEY_SECRET={your_access_key_secret}
   "mcpServers": {
     "YingDao RPA MCP Server": {
       "command": "npx",
-      "args": ["-y", "yingdao-mcp-server"],
+      "args": ["-y", "yingdao-mcp-server-community"],
       "env":{
         "RPA_MODEL":"openApi",
         "ACCESS_KEY_ID":"{your_access_key_id}",
@@ -78,7 +78,7 @@ ACCESS_KEY_SECRET={your_access_key_secret}
 Clone the repository and build:
 
 ```bash
-git clone https://github.com/ying-dao/yingdao_mcp_server.git
+git clone https://github.com/scoooooott/yingdao_mcp_server.git
 cd yingdao_mcp_server
 npm install
 npm run build
@@ -118,6 +118,30 @@ AI Power 客户端配置
 4. **startJob**: 启动RPA作业
 5. **queryJob**: 查询RPA作业状态
 6. **queryClientList**: 查询调度RPA机器人列表
+
+## 与原仓库的关系
+
+- 本项目为从 `ying-dao/yingdao_mcp_server` 派生（fork）的社区维护版本。
+- 目标：更易安装与分发（npm/tgz）、保持与 MCP 客户端的良好集成。
+- 兼容性：保留原有两种模式（SSE/HTTP 与 Stdio），接口和用法保持一致。
+- 仓库地址（本仓库）：https://github.com/scoooooott/yingdao_mcp_server
+- 原仓库地址：https://github.com/ying-dao/yingdao_mcp_server
+
+## 主要功能增强
+
+- 完整列出“我获取的应用”（不再只限 `_Release` 后缀）。
+- 应用参数获取改为调用平台 API（替代解析加密的 `main.flow.json`）。
+- 新增市场应用执行权限检查接口（启动前判断是否可执行）。
+- 启动应用支持传入参数（`runApp` 可以携带参数）。
+- i18n 修正：统一错误提示键值，修复缺失 `robotUuid` 的报错引用。
+- 包发布与命令名：提供 npm 包与 `.tgz` 分发；CLI 名称为 `yingdao-mcp-server-community`。
+
+## 迁移指南（从原包到社区包）
+
+- npx 命令：`yingdao-mcp-server` → `yingdao-mcp-server-community`
+- STDIO 模式命令：`yingdao-mcp-server-community`
+- SSE/HTTP 模式命令：`yingdao-mcp-server-community --server`，客户端配置的 `url` 仍为 `http://localhost:3000/sse`
+- 环境变量保持一致：`RPA_MODEL`、`SHADOWBOT_PATH`、`USER_FOLDER`（本地模式）、`ACCESS_KEY_ID/ACCESS_KEY_SECRET`（开放 API 模式）、`SERVER_PORT`、`LANGUAGE`
 
 ### License
 MIT
