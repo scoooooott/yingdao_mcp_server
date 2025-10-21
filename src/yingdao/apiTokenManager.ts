@@ -13,12 +13,17 @@ export class ApiTokenManager {
     private readonly logDir: string;
 
     constructor(logDir?: string) {
-        if (platform() === 'darwin') {
-            this.logDir = path.join(homedir(), 'Library', 'Application Support', 'Shadowbot', 'log');
-        } else if (logDir) {
+        if (logDir) {
             this.logDir = logDir;
         } else {
-            this.logDir = '';
+            if (platform() === 'darwin') {
+                this.logDir = path.join(homedir(), 'Library', 'Application Support', 'Shadowbot', 'log');
+            } else if (platform() === 'win32') {
+                // Windows 默认日志路径: %USERPROFILE%\AppData\Local\Shadowbot\log
+                this.logDir = path.join(homedir(), 'AppData', 'Local', 'Shadowbot', 'log');
+            } else {
+                this.logDir = "";
+            }
         }
     }
 
@@ -26,7 +31,8 @@ export class ApiTokenManager {
         const yyyy = d.getFullYear();
         const mm = String(d.getMonth() + 1).padStart(2, '0');
         const dd = String(d.getDate()).padStart(2, '0');
-        return `${yyyy}${mm}${dd}.main.log`;
+        // Windows 使用 YYYYMMDD.log，macOS 使用 YYYYMMDD.main.log
+        return platform() === 'win32' ? `${yyyy}${mm}${dd}.log` : `${yyyy}${mm}${dd}.main.log`;
     }
 
     private findLatestLogFile(): string | null {
@@ -36,9 +42,11 @@ export class ApiTokenManager {
         const todayFile = path.join(this.logDir, this.formatDateFileName(new Date()));
         if (existsSync(todayFile)) return todayFile;
 
-        // 兜底：按文件名中日期倒序选择最新的 *.main.log
+        // 兜底：按文件名中日期倒序选择最新的日志文件
+        // Windows: YYYYMMDD.log, macOS: YYYYMMDD.main.log
+        const filePattern = platform() === 'win32' ? /^\d{8}\.log$/ : /^\d{8}\.main\.log$/;
         const files = readdirSync(this.logDir)
-            .filter(f => f.endsWith('.main.log') && /^\d{8}\.main\.log$/.test(f));
+            .filter(f => filePattern.test(f));
         if (files.length === 0) {
             return null;
         }
@@ -56,8 +64,10 @@ export class ApiTokenManager {
 
             let lastToken: string | null = null;
             const patterns = [
-                /\btoken:\s*([0-9a-fA-F-]{36})\b/, // UUID-like token
-                /\btoken:\s*([^\s]+)\b/,           // 通用备用匹配
+                // 精确匹配UUID格式的token（如：57072a1e-c1a1-479d-b579-c5b7431ff35d）
+                /\btoken:\s*\[?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})]?\b/,
+                /\btoken:\s*\[?([0-9a-fA-F-]{36})]?\b/, // UUID-like token
+                /\btoken:\s*\[?(\S+)]?\b/,  // 通用备用匹配
             ];
 
             rl.on('line', (line: string) => {

@@ -1,123 +1,111 @@
-<p>
-  <img src="src/assets/yingdao_logo.svg" width="256"/>
-</p>
+# Yingdao MCP Server (Community)
 
-# 影刀RPA MCP Server
+[![npm version](https://img.shields.io/npm/v/yingdao-mcp-server-community.svg)](https://www.npmjs.com/package/yingdao-mcp-server-community) [![npm downloads](https://img.shields.io/npm/dm/yingdao-mcp-server-community.svg)](https://www.npmjs.com/package/yingdao-mcp-server-community) [![Node >= 18](https://img.shields.io/badge/node-%3E%3D%2018-green)](https://nodejs.org/)  
+[![Release](https://img.shields.io/github/v/release/scoooooott/yingdao_mcp_server)](https://github.com/scoooooott/yingdao_mcp_server/releases) [![Last Commit](https://img.shields.io/github/last-commit/scoooooott/yingdao_mcp_server)](https://github.com/scoooooott/yingdao_mcp_server/commits/main) [![Stars](https://img.shields.io/github/stars/scoooooott/yingdao_mcp_server?style=social)](https://github.com/scoooooott/yingdao_mcp_server)
 
+社区维护的影刀 RPA MCP Server，支持两种运行模式：STDIO 与 SSE/HTTP。相比原仓库，提供更易用的安装与分发（npm/tgz）、更完整的工具与参数支持，并保持与 MCP 客户端的良好集成。
 
-[影刀RPA](https://www.yingdao.com):一个RPA低代码平台，一款人人可用的RPA自动化产品，能够将人从重复的劳动中解放出来。
-<br/>
-[影刀AI Power](https://www.yingdao.com/ai-power):一个AI低代码平台，能够快速创建AI智能体、AI工作流，帮助用户把AI用起来。
+## 特性展示
+- 支持 STDIO 与 SSE/HTTP 两种运行模式。
+- 更易安装与分发：npm / tgz 可选。
+- 与 MCP 客户端良好集成（如 Claude Desktop）。
+- 完整工具与参数支持，覆盖应用查询、参数获取、任务启动与结果查询等。
+<img src="src/assets/windows-runApp-with-args.gif" alt="Windows runApp with args" width="720" />
+- 多语言支持：`LANGUAGE`（默认 `zh`）。
+- 运行环境：Node.js `>= 18`。
 
-影刀 RPA MCP Server 基于 Model Context Protocol (MCP) 实现，为影刀AI Power及其他可作为MCP Host的工具(如 Claude Desktop、Cursor 等)提供调用RPA的能力。
+## 功能说明
 
+### 本地模式（local）
+- 依赖参数：`SHADOWBOT_PATH`、`USER_FOLDER`。
+- 支持能力：
+  - `queryApplist`：查询应用列表。
+  - `queryRobotParam`：查询应用参数。
+  - `runApp`：启动应用并传参（目前仅部分 Windows 环境支持传参，macOS 暂不支持）。
+- 典型场景：直接调用本机影刀客户端，低延迟，适合单机使用。
 
-同时支持SSE Server与Stdio Server两种模式。
+### 开放 API 模式（openapi）
+- 依赖参数：`ACCESS_KEY_ID`、`ACCESS_KEY_SECRET`。
+- 支持能力：
+  - `queryApplist`：查询应用列表。
+  - `queryRobotParam`：查询应用参数。
+  - `uploadFile`：上传文件。
+  - `startJob`：启动应用任务（支持对象参数自动转换）。
+  - `queryJob`：查询任务执行结果。
+  - `queryClientList`：查询调度 RPA 机器人列表。
+- 典型场景：通过服务端或远程接口调用，适合跨进程/跨网络场景。
 
-# 如何开始
-支持两种方式来运行影刀RPA
-## 本地模式
-设置环境变量
-注意：本地模式下，智能获取并运行“我获取的应用”并已经被至少执行过一次的应用
-```bash
-RPA_MODEL=local
-SHADOWBOT_PATH={your_shadowbot_path} //影刀rpa的exe路径
-USER_FOLDER={your_user_folder}       //影刀rpa的用户文件夹路径
-```
-### 影刀RPA的exe路径
-Windows
-注意：windows下在AI Power客户端中，路径要使用双斜杠
-```bash
-D://Program Files//{安装目录}//ShadowBot.exe
-```
+## 快速启动
+1. 准备需要的参数：
+   - 本地模式：
+     - `SHADOWBOT_PATH`
+       - Windows（示例）：`E:\Program Files\ShadowBot\ShadowBot.exe`
+       - MacOS（示例）：`/Applications/影刀.app`
+     - `USER_FOLDER`: 用户文件夹路径（[在影刀设置中查看](#路径与示意)）
+   - 开放 API 模式：
+     - `ACCESS_KEY_ID`：影刀控制台获取
+     - `ACCESS_KEY_SECRET`：影刀控制台获取
+2. 选择运行模式：STDIO（推荐）或 SSE/HTTP。
+3. 启动并配置 MCP 客户端：
+   - STDIO：在 `mcpServers` 中设置 `command`/`args` 与 `env`。
+   - SSE/HTTP：先启动本地服务，再在 `mcpServers` 使用 `type: "sse"` 与 `url`。
 
-Mac
+## 详细信息
 
-```bash
-/Applications/影刀.app
-```
+### 环境变量说明
+- `LANGUAGE`：多语言（默认 `zh`），如 `en`。
+- `RPA_MODEL`：运行模式（默认 `local`）。
+  - `local`：需要 `SHADOWBOT_PATH` 与 `USER_FOLDER`。
+  - `openapi`：需要 `ACCESS_KEY_ID` 与 `ACCESS_KEY_SECRET`。
+- `SHADOWBOT_PATH`：影刀客户端路径（macOS 下可能为 `ShadowBot.app` 或 `影刀.app`，以本机实际为准）。
+- `USER_FOLDER`：影刀用户目录（用于定位 `apps/` 及日志）。
+- `ACCESS_KEY_ID` / `ACCESS_KEY_SECRET`：开放 API 访问凭据。
+- `SERVER_PORT`：SSE/HTTP 服务端口（默认 3000）。
 
-### 影刀RPA的用户文件夹路径
-在影刀RPA的设置中，找用户文件夹选项
-<p><img src="src/assets/user_folder.png" width="512"/></p>
+### 配置示例
 
-
-## 开放API模式 (仅支持企业用户)
-设置环境变量
-
-```bash
-RPA_MODEL=openApi
-ACCESS_KEY_ID={your_access_key_id}
-ACCESS_KEY_SECRET={your_access_key_secret}
-```
-
-### 获取方式
-企业管理员登录影刀RPA控制台获取，请参考[影刀RPA帮助文档-鉴权](https://www.yingdao.com/yddoc/rpa/710499792859115520)
-
-# Stdio Server启动
-在客户端中配置
+#### STDIO 模式
 ```json
+// macos
 {
   "mcpServers": {
-    "YingDao RPA MCP Server": {
+    "yingdao": {
       "command": "npx",
-      "args": ["-y", "yingdao-mcp-server"],
-      "env":{
-        "RPA_MODEL":"openApi",
-        "ACCESS_KEY_ID":"{your_access_key_id}",
-        "ACCESS_KEY_SECRET":"{your_access_key_secret}"
+      "args": ["yingdao-mcp-server-community"],
+      "env": {
+        "LANGUAGE": "zh",
+        "RPA_MODEL": "local",
+        "SHADOWBOT_PATH": "/Applications/Shadowbot.app",
+        "USER_FOLDER": "/Users/<you>/Library/Application Support/Shadowbot/user/<用户id>"
       }
     }
   }
 }
 ```
-# SSE Server配置
 
-## 构建
-
-Clone the repository and build:
-
-```bash
-git clone https://github.com/ying-dao/yingdao_mcp_server.git
-cd yingdao_mcp_server
-npm install
-npm run build
-```
-
-## 配置
-添加.env文件，配置项参考以上描述
-
-## 启动
-```bash
-npm run start:server
-```
-## 客户端配置
-AI Power 客户端配置
+#### SSE/HTTP 模式
+- 安装：`npm i -g yingdao-mcp-server-community`
+- 启动：
+  - 本地模式（示例）：`RPA_MODEL=local SHADOWBOT_PATH="/Applications/Shadowbot.app" USER_FOLDER="/Users/<you>/Library/Application Support/Shadowbot/user/{用户id}" yingdao-mcp-server-community --server`
+  - 开放 API 模式（示例）：`RPA_MODEL=openapi ACCESS_KEY_ID="<id>" ACCESS_KEY_SECRET="<secret>" SERVER_PORT=3000 yingdao-mcp-server-community --server`
+- MCP 客户端配置：
 ```json
 {
   "mcpServers": {
-    "YingDao RPA MCP Server": {
+    "yingdao": {
+      "type": "sse",
       "url": "http://localhost:3000/sse",
-      "description": "影刀 MCP Server"
+      "autoReconnect": true,
+      "retryLimit": null
     }
   }
 }
 ```
-默认端口为3000
 
-# 能力
-## 本地模式
-1. **queryRobotParam**: 查询RPA应用的参数
-2. **queryApplist**: 查询RPA应用的列表
-3. **runApp**: 运行RPA应用
+### 路径与示意
+<p><img src="src/assets/user_folder.png" width="512"/></p>
 
-## 开放API模式
-1. **uploadFile**: 上传文件到RPA平台
-2. **queryRobotParam**: 查询RPA应用参数
-3. **queryApplist**: 获取分页RPA应用列表
-4. **startJob**: 启动RPA作业
-5. **queryJob**: 查询RPA作业状态
-6. **queryClientList**: 查询调度RPA机器人列表
 
-### License
-MIT
+
+原仓库：https://github.com/ying-dao/yingdao_mcp_server
+许可证：`MIT`
