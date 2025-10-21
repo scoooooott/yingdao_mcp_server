@@ -10,3 +10,4 @@ pnpm-lock.yaml
 # IDE
 .idea/
 .vscode/
+.DS_Store
