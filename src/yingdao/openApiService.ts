@@ -71,7 +71,7 @@ export class OpenApiService {
 
     // Create FormData and convert file to Blob
     const formData = new FormData();
-    const blob = typeof file === 'string' ? new Blob([file]) : new Blob([file]);
+    const blob = typeof file === 'string' ? new Blob([file]) : new Blob([new Uint8Array(file)]);
     formData.append('file', blob, fileName);
 
     try {

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.0.4
+- Changed
+  - Windows 测试与修复，文档优化。
+  - README 内部锚点与示例结构统一。
+- Build
+  - 确保 prepublish 构建正常，添加 TypeScript 作为开发依赖。
+
 ## v0.0.3
 - Added
   - Full "My Apps" listing (not limited to `_Release`).
